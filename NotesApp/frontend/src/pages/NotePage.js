@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { ReactComponent as ArrowLeft } from '../assets/arrow-left.svg'
-import { Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const NotePage = ({ match, history }) => {
+const NotePage = () => {
+    // console.log(match)
+    const { id: noteId } = useParams();
+    const history = useNavigate();
 
-    let noteId = match.params.id
     let [note, setNote] = useState(null)
 
     useEffect(() => {
         getNote()
-    }, [noteId])
+    }, [noteId]) // dependencies part
 
 
     let getNote = async () => {
@@ -49,11 +51,10 @@ const NotePage = ({ match, history }) => {
                 'Content-Type': 'application/json'
             }
         })
-        history.push('/')
+        history('/')
     }
 
     let handleSubmit = () => {
-        console.log('NOTE:', note)
         if (noteId !== 'new' && note.body == '') {
             deleteNote()
         } else if (noteId !== 'new') {
@@ -61,12 +62,12 @@ const NotePage = ({ match, history }) => {
         } else if (noteId === 'new' && note.body !== null) {
             createNote()
         }
-        history.push('/')
+        history('/')
     }
 
     let handleChange = (value) => {
         setNote(note => ({ ...note, 'body': value }))
-        console.log('Handle Change:', note)
+        // console.log('Handle Change:', note)
     }
 
     return (
